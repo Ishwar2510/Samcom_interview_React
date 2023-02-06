@@ -10,6 +10,9 @@ function Todo() {
     taskname: "",
     oldtaskname: "",
   });
+  if(!localStorage.getItem("list")){
+    localStorage.setItem("list", JSON.stringify([]));
+  }
   const [input, setInput] = useState({
     taskName: "",
     priority: "",
@@ -27,9 +30,14 @@ function Todo() {
     }
   }, []);
   useEffect(() => {
+   try{
     setTodoList((prev) => {
-      return [...prev];
-    });
+        return [...prev];
+      });
+   }catch{
+    localStorage.setItem("list", JSON.stringify([]));
+   }
+   
   }, [changed]);
 
   function handleinput(e) {
