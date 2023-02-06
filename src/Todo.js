@@ -10,7 +10,7 @@ function Todo() {
     taskname: "",
     oldtaskname: "",
   });
-  if(!localStorage.getItem("list")){
+  if (!localStorage.getItem("list")) {
     localStorage.setItem("list", JSON.stringify([]));
   }
   const [input, setInput] = useState({
@@ -22,22 +22,13 @@ function Todo() {
   });
 
   useEffect(() => {
-    try {
-      let data = JSON.parse(localStorage.getItem("list"));
-      setTodoList(data);
-    } catch {
-      localStorage.setItem("list", JSON.stringify([]));
-    }
+    let data = JSON.parse(localStorage.getItem("list"));
+    setTodoList(data);
   }, []);
   useEffect(() => {
-   try{
     setTodoList((prev) => {
-        return [...prev];
-      });
-   }catch{
-    localStorage.setItem("list", JSON.stringify([]));
-   }
-   
+      return [...prev];
+    });
   }, [changed]);
 
   function handleinput(e) {
@@ -112,20 +103,25 @@ function Todo() {
   function saveEdit() {
     let data = todoList;
 
+    console.log(editData.taskname);
+    console.log(editData.oldtaskname);
     for (let i = 0; i < data.length; i++) {
-      if (data[i].taskName === editData.oldtaskname) {
-        console.log();
+      if (data[i].taskName.trim() == editData.oldtaskname.trim()) {
+        console.log("hello");
         data[i].taskName = editData.taskname;
         break;
       }
     }
+    localStorage.setItem("list", JSON.stringify(data));
     setTodoList(data);
     setEdit(false);
   }
   function handleEdit(e) {
-    let data = "" + e.target.value;
+    let data = editData.oldtaskname + " ";
+
     setEditData({ taskname: e.target.value, oldtaskname: data });
   }
+
   return (
     <div className="todo">
       <h1>TO DO List</h1>
@@ -244,12 +240,15 @@ function Todo() {
               : todoList.map((e) => {
                   return (
                     <tr key={e.taskName}>
-                      <td
-                        onClick={() => {
-                          Toedit(e);
-                        }}
-                      >
+                      <td>
                         {e.taskName}
+                        <button style={{borderRadius:"20px"}}
+                          onClick={() => {
+                            Toedit(e);
+                          }}
+                        >
+                          e
+                        </button>
                       </td>
                       <td>{e.priority}</td>
                       <td>{e.status}</td>
